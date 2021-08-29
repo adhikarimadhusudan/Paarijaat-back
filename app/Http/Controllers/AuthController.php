@@ -64,6 +64,15 @@ class AuthController extends Controller
                 ));
         $token = Auth::login($user);
 
+        if($request->hasFile('profile')) {
+            $file = $request->file('profile');
+            $file_name = time(). '.' . $file->getClientOriginalName();
+            $file->move(public_path('users/profiles'), $file_name);
+            $user = Auth::user();
+            $user->profile = $file_name;
+            $user->save();
+        }
+
                 
         return $this->createNewToken($token);
     }
